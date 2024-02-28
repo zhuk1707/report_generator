@@ -1,8 +1,11 @@
 import './App.css';
 import React from "react";
 
+//todo make correct report generation
+//todo fix select
+//todo add copy report feature
 
-function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs ,handleChange}) {
+function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs, handleChange}) {
   return (<>
     <form className='main__form form' action="">
       <label className="form__label">
@@ -38,39 +41,195 @@ function FormSelect({selectName, formInputs, handleChange}) {
   </select>)
 }
 
-function SalesItems({name}) {
+function SalesItem({index, inputs, setInputs}) {
+  const handleChange = (e) => {
+    const key = e.target.name
+    let value = e.target.value
+    if (e.target.type === 'checkbox') {
+      value = e.target.checked
+    }
+
+    if ((/[^0-9]/).test(value) && e.target.type !== 'checkbox') return
+
+    setInputs((values) => {
+        const valuesCopy = [...values]
+        valuesCopy[index] = {...valuesCopy[index], [key]: value}
+        return valuesCopy
+      }
+    )
+  }
+
+  const handleOptionBtnClick = (e) => {
+    let destination = 'price'
+    let delta = 10
+    if (e.target.className.includes('options__button_left')) {
+      delta *= (-1)
+    }
+
+    if (e.target.className.includes('options__button_count')) {
+      delta /= 10
+      destination = 'count'
+    }
+
+    setInputs((values) => {
+        const valuesCopy = [...values]
+        valuesCopy[index] = {...valuesCopy[index], [destination]: (+valuesCopy[index][destination] + delta)}
+        return valuesCopy
+      }
+    )
+  }
+
   return <div className="sales__item">
-    <div className="sales__item-name">{name}</div>
+    <div className="sales__item-name">{inputs.itemName || 'No name'}</div>
     <form className="sales__options options">
-      <label className="options__name" htmlFor="checkbox">Used</label>
+      <label className="options__name" htmlFor={"checkbox" + index}>Used</label>
       <input
-        type='checkbox'
         className="option__checkbox"
-        id="checkbox"
+        id={'checkbox' + index}
+        type="checkbox"
         name="checkbox"
+        value="foo"
+        checked={inputs.checkbox || false}
+        onChange={handleChange}
       />
+      <br/>
 
-      <div className="options__name">Price</div>
-      <button className='options__button options__button_left' type="button">-</button>
-      <input type="text" className="options__input" placeholder='150'/>
-      <button className='options__button options__button_right' type="button">+</button>
+      <label className="options__name" htmlFor={"price" + index}>Price</label>
+      <button
+        className='options__button options__button_left'
+        type="button"
+        onClick={handleOptionBtnClick}
+      >-10
+      </button>
+      <input
+        className="options__input"
+        id={"price" + index}
+        type="text"
+        name='price'
+        value={inputs.price || ''}
+        onChange={handleChange}
+      />
+      <button
+        className='options__button options__button_right'
+        type="button"
+        onClick={handleOptionBtnClick}
+      >+10
+      </button>
 
-      <div className="options__name">Count</div>
-      <button className='options__button options__button_left' type="button">-</button>
-      <input type="text" className="options__input" placeholder='0'/>
-      <button className='options__button options__button_right' type="button">+</button>
+      <label className="options__name" htmlFor={'count' + index}>Count</label>
+      <button
+        className='options__button options__button_left options__button_count'
+        type="button"
+        onClick={handleOptionBtnClick}
+      >-1
+      </button>
+      <input
+        className="options__input"
+        id={"count" + index}
+        type="text"
+        name='count'
+        value={inputs.count || ''}
+        onChange={handleChange}
+      />
+      <button
+        className='options__button options__button_right options__button_count'
+        type="button"
+        onClick={handleOptionBtnClick}
+      >+1
+      </button>
     </form>
   </div>
 }
 
-function App() {
-  const [goods] = React.useState([
-    "Profit St. New 2mm", "Profit St. New 4mm",
-    "Profit St. New 10mm", "Profit Out. New 2mm",
-    "Profit Out. New 4mm", "Profit Out. New 10mm"
-  ])
+function GeneratedReport({formInputs}) {
+  return (<>
+    <div className="main__report report">
+      <ReportContent formInputs={formInputs}/>
+      <button disabled className={"report__button"}>Copy</button>
+    </div>
+  </>)
+}
 
+function ReportContent({formInputs}) {
+  const rate = formInputs.rate
+  const shopName = formInputs.shopName
+  const rentCount = formInputs.rentCount
+  const hardware = formInputs.hardware
+  const [sales] = React.useState()
+  const rentProfit = rentCount * 14
+  const amount = rentCount * 14 + +hardware
+  const amountUsd = (amount / rate).toFixed(2)
+
+  if (hardware && sales) {
+    return (
+      <div className="report__container">
+        Курс = {rate} <br/>
+        {shopName === "Almi" && "АЛМИ:"}<br/>
+        {rentCount} прокат(а/ов) - {rentProfit}р<br/> <br/>
+        Sales: <br/>
+        ? <br/>
+        ? <br/><br/>
+        Железо - {hardware}р<br/><br/>
+        Итого: {amount}р ( {amountUsd} $)<br/>
+      </div>
+    )
+  }
+
+  if (hardware) {
+    return (
+      <div className="report__container">
+        Курс = {rate} <br/>
+        {shopName === "Almi" && "АЛМИ:"}<br/>
+        {rentCount} прокат(а/ов) - {rentProfit}р<br/>
+        Железо - {hardware}<br/>
+        Итого: {amount}р ( {amountUsd} $)<br/>
+      </div>)
+
+  }
+
+  if (sales) {
+    return (
+      <div className="report__container">
+        Курс = {rate || ''} <br/>
+        {shopName === "Almi" && "АЛМИ:"}<br/>
+        {rentCount} прокат(а/ов) - {rentProfit}р<br/> <br/>
+        Sales: <br/>
+        ? <br/>
+        ? <br/><br/>
+        Итого: {amount}р ( {amountUsd} $)<br/>
+      </div>)
+  }
+
+  if (rentCount === "0") {
+    return (
+      <div className="report__container">
+        {shopName === "Almi" && "АЛМИ: 0"}
+      </div>
+    )
+  }
+
+
+  return (
+    <div className="report__container">
+      Курс = {rate} <br/>
+      {shopName === "Almi" && "АЛМИ:"}<br/>
+      {rentCount} прокат(а/ов) - {rentProfit}р {amount}р ({amountUsd}$)
+    </div>
+  )
+}
+
+
+function App() {
   const [formInputs, setFormInputs] = React.useState({rate: '', shopName: "Almi", rentCount: '', hardware: 0})
+
+  const [inputs, setInputs] = React.useState([
+    {itemName: "Profit St. New 2mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit St. New 4mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit St. New 10mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit Out. New 2mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit Out. New 4mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit Out. New 10mm", price: 0, count: 0, checkbox: false},
+  ])
 
   const handleChange = (event) => {
     const key = event.target.name
@@ -78,11 +237,10 @@ function App() {
     setFormInputs((prevState) => ({...prevState, [key]: value}))
   }
 
-  const handleGenerate = () => {
-    console.log(formInputs)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(inputs)
   }
-
-
 
   return (
     <div className="App">
@@ -91,36 +249,34 @@ function App() {
       </header>
 
       <main className='main'>
-        <Form labelInfo={'Rate'} isInput={true} inputInfo={{name: "rate"}} formInputs={formInputs} handleChange = {handleChange} />
-        <Form labelInfo={'Shop name'} isInput={false} selectInfo={{name: "shopName"}} formInputs={formInputs} handleChange={handleChange}/>
-        <Form labelInfo={'Rent count'} isInput={true} inputInfo={{name: "rentCount"}} formInputs={formInputs} handleChange={handleChange}/>
-        <Form labelInfo={'Hardware earnings'} isInput={true} inputInfo={{name: "hardware"}} formInputs={formInputs} handleChange={handleChange}/>
+        <Form labelInfo={'Rate'} isInput={true} inputInfo={{name: "rate"}} formInputs={formInputs}
+              handleChange={handleChange}/>
+        <Form labelInfo={'Shop name'} isInput={false} selectInfo={{name: "shopName"}} formInputs={formInputs}
+              handleChange={handleChange}/>
+        <Form labelInfo={'Rent count'} isInput={true} inputInfo={{name: "rentCount"}} formInputs={formInputs}
+              handleChange={handleChange}/>
+        <Form labelInfo={'Hardware earnings'} isInput={true} inputInfo={{name: "hardware"}} formInputs={formInputs}
+              handleChange={handleChange}/>
 
         <div className="main__sales sales">
-          {goods.map((name, index) => (
-            <SalesItems
+          {inputs.map((el, index) => (
+            <SalesItem
               key={index}
-              name={name}
-            />
+              index={index}
+              inputs={el}
+              setInputs={setInputs}/>
           ))}
         </div>
 
-        <button className='main__button generate-button' type='button' onClick={handleGenerate}>
-          Generate
+        <button
+          className='main__button generate-button'
+          type='button'
+          onClick={handleSubmit}
+        >Generate
         </button>
 
-        <div className="main__report report">
-          {/*<div className="report__container">
-            Курс = {formInputs.rate || ''} <br/>
-            {formInputs.shopName === "Almi" && "Алми:"}<br/>
-            {formInputs.rentCount} прокат(а/ов) - {formInputs.rentCount*14}р<br/> <br/>
-            Sales: <br/>
-            ? <br/>
-            ? <br/><br/>
-            {(formInputs.hardware)? `Железо - ${formInputs.hardware}р` : ''}<br/><br/>
-            Итого: {formInputs.rentCount * 14 + +formInputs.hardware}р ( {(formInputs.rentCount *14 + +formInputs.hardware)/formInputs.rate} $)<br/>
-          </div>*/}
-        </div>
+        {/*<GeneratedReport formInputs={formInputs}/>*/}
+
       </main>
 
     </div>

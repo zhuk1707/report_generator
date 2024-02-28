@@ -161,9 +161,33 @@ button {
   border-radius: 4px;
 }
 
-.generate-button:hover {
+.generate-button:hover,
+.report__button:hover {
   background-color: #e0e0e0;
+  border: 1px solid #9a9a9a;
 }
 
 .report {
+  margin-top: 20px;
+  padding: 10px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.report__container {
+}
+
+.report__button {
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
