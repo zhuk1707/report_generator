@@ -1,9 +1,10 @@
 import './App.css';
 import React from "react";
 
-//todo make correct report generation
-//todo fix select
+//todo add lifetime value change
 //todo add copy report feature
+//todo add clear all btn feature
+//todo add duplicate item feature
 
 function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs, handleChange}) {
   return (<>
@@ -37,11 +38,12 @@ function FormSelect({selectName, formInputs, handleChange}) {
     value={formInputs[selectName] || ''}
     onChange={handleChange}
   >
-    <option value="Almi">ALMI</option>
+    <option value="ALMI">ALMI</option>
+    <option value="Almi">Almi</option>
   </select>)
 }
 
-function SalesItem({index, inputs, setInputs}) {
+function SalesItem({index, inputs, setInputs, setIsGenerated}) {
   const handleChange = (e) => {
     const key = e.target.name
     let value = e.target.value
@@ -57,6 +59,8 @@ function SalesItem({index, inputs, setInputs}) {
         return valuesCopy
       }
     )
+
+    setIsGenerated(false)
   }
 
   const handleOptionBtnClick = (e) => {
@@ -77,6 +81,8 @@ function SalesItem({index, inputs, setInputs}) {
         return valuesCopy
       }
     )
+
+    setIsGenerated(false)
   }
 
   return <div className="sales__item">
@@ -141,36 +147,64 @@ function SalesItem({index, inputs, setInputs}) {
   </div>
 }
 
-function GeneratedReport({formInputs}) {
-  return (<>
+function GeneratedReport({formInputs, salesItemInputs, isGenerated}) {
+  const [clipboard, setClipboard] = React.useState('')
+
+  const handleCopyBtnClick = () => {
+    navigator.clipboard.writeText(clipboard).then()
+  }
+
+  if (isGenerated) return (<>
     <div className="main__report report">
-      <ReportContent formInputs={formInputs}/>
-      <button disabled className={"report__button"}>Copy</button>
+      <ReportContent
+        formInputs={formInputs}
+        salesItemInputs={salesItemInputs}
+        setClipboard={setClipboard}
+      />
+      <button
+        className="report__button"
+        onClick={handleCopyBtnClick}
+      >Copy
+      </button>
     </div>
   </>)
 }
 
-function ReportContent({formInputs}) {
+function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   const rate = formInputs.rate
   const shopName = formInputs.shopName
   const rentCount = formInputs.rentCount
   const hardware = formInputs.hardware
-  const [sales] = React.useState()
+
   const rentProfit = rentCount * 14
   const amount = rentCount * 14 + +hardware
-  const amountUsd = (amount / rate).toFixed(2)
 
-  if (hardware && sales) {
+  const sales = salesItemInputs.filter((el) => {
+    if (el.price !== 0) {
+      return el
+    }
+  })
+
+  const allAmount = sales.reduce((prev, el) => {
+    return prev + (el.price * el.count)
+  }, amount)
+
+  const allAmountUsd = (allAmount / rate).toFixed(2)
+
+  //setClipboard
+
+  if (hardware && sales.length) {
     return (
       <div className="report__container">
         Курс = {rate} <br/>
         {shopName === "Almi" && "АЛМИ:"}<br/>
-        {rentCount} прокат(а/ов) - {rentProfit}р<br/> <br/>
-        Sales: <br/>
-        ? <br/>
-        ? <br/><br/>
-        Железо - {hardware}р<br/><br/>
-        Итого: {amount}р ( {amountUsd} $)<br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
+        Sales:
+        {sales.map((el) => {
+          return <div>{el.itemName} {el.checkbox ? 'used' : ''} — {el.price}р</div>
+        })} <br/>
+        Железо — {hardware}р<br/><br/>
+        Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>
     )
   }
@@ -180,27 +214,14 @@ function ReportContent({formInputs}) {
       <div className="report__container">
         Курс = {rate} <br/>
         {shopName === "Almi" && "АЛМИ:"}<br/>
-        {rentCount} прокат(а/ов) - {rentProfit}р<br/>
-        Железо - {hardware}<br/>
-        Итого: {amount}р ( {amountUsd} $)<br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/>
+        Железо — {hardware}<br/>
+        Итого: {allAmount}р ( {allAmountUsd} $)<br/>
       </div>)
 
   }
 
-  if (sales) {
-    return (
-      <div className="report__container">
-        Курс = {rate || ''} <br/>
-        {shopName === "Almi" && "АЛМИ:"}<br/>
-        {rentCount} прокат(а/ов) - {rentProfit}р<br/> <br/>
-        Sales: <br/>
-        ? <br/>
-        ? <br/><br/>
-        Итого: {amount}р ( {amountUsd} $)<br/>
-      </div>)
-  }
-
-  if (rentCount === "0") {
+  if (!rentCount) {
     return (
       <div className="report__container">
         {shopName === "Almi" && "АЛМИ: 0"}
@@ -213,33 +234,46 @@ function ReportContent({formInputs}) {
     <div className="report__container">
       Курс = {rate} <br/>
       {shopName === "Almi" && "АЛМИ:"}<br/>
-      {rentCount} прокат(а/ов) - {rentProfit}р {amount}р ({amountUsd}$)
+      {rentCount} прокат(а/ов) — {allAmount}р ({allAmountUsd}$)
     </div>
   )
 }
 
 
 function App() {
-  const [formInputs, setFormInputs] = React.useState({rate: '', shopName: "Almi", rentCount: '', hardware: 0})
+  const [formInputs, setFormInputs] = React.useState({
+    rate: '3.14',
+    shopName: "Almi",
+    rentCount: 2,
+    hardware: 1
+  })
 
-  const [inputs, setInputs] = React.useState([
-    {itemName: "Profit St. New 2mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit St. New 4mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit St. New 10mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit Out. New 2mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit Out. New 4mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit Out. New 10mm", price: 0, count: 0, checkbox: false},
+  const [salesItemInputs, setSalesItemInputs] = React.useState([
+    {itemName: "Profit St. 2mm", price: 150, count: 1, checkbox: false},
+    {itemName: "Profit St. 4mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit St. 10mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit P. 2mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit P. 4mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Profit P. 10mm", price: 90, count: 1, checkbox: true},
   ])
 
-  const handleChange = (event) => {
-    const key = event.target.name
-    const value = event.target.value
+  //todo default value must be true
+  const [isGenerated, setIsGenerated] = React.useState(false)
+
+  const handleChange = (e) => {
+    let key = e.target.name
+    const value = e.target.value
+
+    if (e.target.className.includes("form__select")) {
+      key = e.target.shopName
+    }
     setFormInputs((prevState) => ({...prevState, [key]: value}))
+    setIsGenerated(false)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(inputs)
+    setIsGenerated(true)
   }
 
   return (
@@ -259,12 +293,14 @@ function App() {
               handleChange={handleChange}/>
 
         <div className="main__sales sales">
-          {inputs.map((el, index) => (
+          {salesItemInputs.map((el, index) => (
             <SalesItem
               key={index}
               index={index}
               inputs={el}
-              setInputs={setInputs}/>
+              setInputs={setSalesItemInputs}
+              setIsGenerated={setIsGenerated}
+            />
           ))}
         </div>
 
@@ -275,7 +311,7 @@ function App() {
         >Generate
         </button>
 
-        {/*<GeneratedReport formInputs={formInputs}/>*/}
+        <GeneratedReport formInputs={formInputs} salesItemInputs={salesItemInputs} isGenerated={isGenerated}/>
 
       </main>
 
