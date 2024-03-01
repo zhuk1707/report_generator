@@ -1,10 +1,6 @@
 import './App.css';
 import React from "react";
-
-//todo add lifetime value change
-//todo add copy report feature
-//todo add clear all btn feature
-//todo add duplicate item feature
+import {logDOM} from "@testing-library/react";
 
 function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs, handleChange}) {
   return (<>
@@ -31,15 +27,15 @@ function FormInput({inputName, formInputs, handleChange}) {
   )
 }
 
-function FormSelect({selectName, formInputs, handleChange}) {
+function FormSelect({inputName, formInputs, handleChange}) {
   return (<select
     className='form__select'
-    name={selectName}
-    value={formInputs[selectName] || ''}
+    name={inputName}
+    value={formInputs[inputName] || ''}
     onChange={handleChange}
   >
-    <option value="ALMI">ALMI</option>
-    <option value="Almi">Almi</option>
+    <option value="almi">АЛМИ</option>
+    <option value="siluet">Силуэт</option>
   </select>)
 }
 
@@ -52,6 +48,7 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
     }
 
     if ((/[^0-9]/).test(value) && e.target.type !== 'checkbox') return
+    if (e.target.type !== 'checkbox') value = +value
 
     setInputs((values) => {
         const valuesCopy = [...values]
@@ -171,15 +168,23 @@ function GeneratedReport({formInputs, salesItemInputs, isGenerated}) {
 }
 
 function ReportContent({formInputs, salesItemInputs, setClipboard}) {
-  const rate = formInputs.rate
-  const shopName = formInputs.shopName
-  const rentCount = formInputs.rentCount
-  const hardware = formInputs.hardware
+  let rate = +formInputs.rate
+  if (isNaN(rate)) rate = 0
+
+  const shopNameFromInput = formInputs.shopName
+  const shopList = {
+    almi: "АЛМИ",
+    siluet: 'Силуэт'
+  }
+  const shopName = shopList[shopNameFromInput]
+
+  const rentCount = +formInputs.rentCount
+  const hardware = +formInputs.hardware
 
   const rentProfit = rentCount * 14
-  const amount = rentCount * 14 + +hardware
+  const amount = rentCount * 14 + hardware
 
-  const sales = salesItemInputs.filter((el) => {
+  const sales = salesItemInputs.filter(el => {
     if (el.price !== 0) {
       return el
     }
@@ -191,18 +196,23 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
 
   const allAmountUsd = (allAmount / rate).toFixed(2)
 
+  const renderSales = (sales) => {
+    return sales.map((el, index) => {
+      return <div key={index}>{el.itemName} {el.checkbox ? 'used' : ''} — {el.price}р</div>
+    })
+  }
+
+
   //setClipboard
 
   if (hardware && sales.length) {
     return (
       <div className="report__container">
         Курс = {rate} <br/>
-        {shopName === "Almi" && "АЛМИ:"}<br/>
+        {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
         Sales:
-        {sales.map((el) => {
-          return <div>{el.itemName} {el.checkbox ? 'used' : ''} — {el.price}р</div>
-        })} <br/>
+        {renderSales(sales)} <br/>
         Железо — {hardware}р<br/><br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>
@@ -213,7 +223,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
     return (
       <div className="report__container">
         Курс = {rate} <br/>
-        {shopName === "Almi" && "АЛМИ:"}<br/>
+        {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/>
         Железо — {hardware}<br/>
         Итого: {allAmount}р ( {allAmountUsd} $)<br/>
@@ -221,10 +231,21 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
 
   }
 
+  if (sales) {
+    return (
+      <div className='report__container'>
+        Курс = {rate} <br/>
+        {shopName}:<br/>
+        {renderSales(sales)} <br/>
+        Итого: {allAmount}р ( {allAmountUsd} $)<br/>
+      </div>
+    )
+  }
+
   if (!rentCount) {
     return (
       <div className="report__container">
-        {shopName === "Almi" && "АЛМИ: 0"}
+        {shopName}: 0<br/>
       </div>
     )
   }
@@ -233,7 +254,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   return (
     <div className="report__container">
       Курс = {rate} <br/>
-      {shopName === "Almi" && "АЛМИ:"}<br/>
+      {shopName}:<br/>
       {rentCount} прокат(а/ов) — {allAmount}р ({allAmountUsd}$)
     </div>
   )
@@ -243,7 +264,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
 function App() {
   const [formInputs, setFormInputs] = React.useState({
     rate: '3.14',
-    shopName: "Almi",
+    shopName: "almi",
     rentCount: 2,
     hardware: 1
   })
@@ -257,16 +278,16 @@ function App() {
     {itemName: "Profit P. 10mm", price: 90, count: 1, checkbox: true},
   ])
 
-  //todo default value must be true
   const [isGenerated, setIsGenerated] = React.useState(false)
 
   const handleChange = (e) => {
     let key = e.target.name
     const value = e.target.value
 
-    if (e.target.className.includes("form__select")) {
-      key = e.target.shopName
-    }
+    if ((/[^.,\d]+/).test(value) && key === "rate") return;
+    if ((/[^0-9]/).test(value) && key !== "rate" && key !== "shopName") return;
+    if (value.match(/[.]|,/g)?.length >= 2) return;
+
     setFormInputs((prevState) => ({...prevState, [key]: value}))
     setIsGenerated(false)
   }
