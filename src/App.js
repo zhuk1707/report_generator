@@ -1,10 +1,12 @@
 import './App.css';
 import React from "react";
-import {logDOM} from "@testing-library/react";
 
 function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs, handleChange}) {
   return (<>
-    <form className='main__form form' action="">
+    <form
+      className='main__form form'
+      onSubmit={event => event.preventDefault()}
+    >
       <label className="form__label">
         {labelInfo}
       </label>
@@ -49,10 +51,16 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
 
     if ((/[^0-9]/).test(value) && e.target.type !== 'checkbox') return
     if (e.target.type !== 'checkbox') value = +value
+    console.log(key, value)
+    // if (key === 'price' && value < 0) value = 0
+
 
     setInputs((values) => {
         const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], [key]: value}
+        valuesCopy[index] = {
+          ...valuesCopy[index],
+          [key]: value,
+        }
         return valuesCopy
       }
     )
@@ -60,25 +68,65 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
     setIsGenerated(false)
   }
 
-  const handleOptionBtnClick = (e) => {
-    let destination = 'price'
+  const handlePriceLeftClick = () => {
+    const itemPrice = inputs.price
     let delta = 10
-    if (e.target.className.includes('options__button_left')) {
-      delta *= (-1)
+    if (itemPrice <= 0) {
+      delta = 0
     }
 
-    if (e.target.className.includes('options__button_count')) {
-      delta /= 10
-      destination = 'count'
+    if (itemPrice < 10) {
+      delta = itemPrice
     }
 
     setInputs((values) => {
         const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], [destination]: (+valuesCopy[index][destination] + delta)}
+        valuesCopy[index] = {...valuesCopy[index], price: (+valuesCopy[index].price - delta)}
         return valuesCopy
       }
     )
+    setIsGenerated(false)
+  }
 
+  const handlePriceRightClick = () => {
+    setInputs((values) => {
+        const valuesCopy = [...values]
+        valuesCopy[index] = {...valuesCopy[index], price: (+valuesCopy[index].price + 10)}
+        return valuesCopy
+      }
+    )
+    setIsGenerated(false)
+  }
+
+  const handleCountLeftClick = () => {
+    if (inputs.count > 0) {
+      setInputs((values) => {
+          const valuesCopy = [...values]
+          valuesCopy[index] = {...valuesCopy[index], count: (+valuesCopy[index].count - 1)}
+          return valuesCopy
+        }
+      )
+    }
+    setIsGenerated(false)
+  }
+
+  const handleCountRightClick = () => {
+    setInputs((values) => {
+        const valuesCopy = [...values]
+        valuesCopy[index] = {...valuesCopy[index], count: (+valuesCopy[index].count + 1)}
+        return valuesCopy
+      }
+    )
+    setIsGenerated(false)
+  }
+
+  const handleClearClick = () => {
+    setInputs((values) => {
+        const valuesCopy = [...values]
+        valuesCopy[index] = {...valuesCopy[index], price: 0, count: 0, checkbox: false}
+        return valuesCopy
+      }
+    )
     setIsGenerated(false)
   }
 
@@ -101,7 +149,7 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
       <button
         className='options__button options__button_left'
         type="button"
-        onClick={handleOptionBtnClick}
+        onClick={handlePriceLeftClick}
       >-10
       </button>
       <input
@@ -115,7 +163,7 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
       <button
         className='options__button options__button_right'
         type="button"
-        onClick={handleOptionBtnClick}
+        onClick={handlePriceRightClick}
       >+10
       </button>
 
@@ -123,7 +171,7 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
       <button
         className='options__button options__button_left options__button_count'
         type="button"
-        onClick={handleOptionBtnClick}
+        onClick={handleCountLeftClick}
       >-1
       </button>
       <input
@@ -137,15 +185,23 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
       <button
         className='options__button options__button_right options__button_count'
         type="button"
-        onClick={handleOptionBtnClick}
+        onClick={handleCountRightClick}
       >+1
+      </button>
+      <button
+        className='options__button options__button_clear'
+        type="button"
+        title='Clear all'
+        onClick={handleClearClick}
+      >✕
       </button>
     </form>
   </div>
 }
 
+//todo
 function GeneratedReport({formInputs, salesItemInputs, isGenerated}) {
-  const [clipboard, setClipboard] = React.useState('')
+  const [clipboard, setClipboard] = React.useState('error')
 
   const handleCopyBtnClick = () => {
     navigator.clipboard.writeText(clipboard).then()
@@ -202,10 +258,15 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
     })
   }
 
+  const getSalesList = (sales) => {
+    return sales.reduce((prev, el) => {
+      return prev + `${el.itemName} ${el.checkbox ? 'used' : ''} — ${el.price}р\n`
+    }, '')
+  }
 
-  //setClipboard
+  if (hardware && sales.length && rentCount) {
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)} \nЖелезо — ${hardware}р\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
 
-  if (hardware && sales.length) {
     return (
       <div className="report__container">
         Курс = {rate} <br/>
@@ -216,10 +277,44 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
         Железо — {hardware}р<br/><br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>
-    )
+    );
+  }
+
+  if (sales.length && rentCount) {
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)}\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
+
+    return (
+      <div className="report__container">
+        Курс = {rate} <br/>
+        {shopName}:<br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
+        Sales:
+        {renderSales(sales)} <br/>
+        Итого: {allAmount}р ({allAmountUsd}$)<br/>
+      </div>
+    );
+  }
+
+  if (hardware && sales.length) {
+
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)} \nЖелезо — ${hardware}р\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
+
+    return (
+      <div className="report__container">
+        Курс = {rate} <br/>
+        {shopName}:<br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
+        Sales:
+        {renderSales(sales)} <br/>
+        Железо — {hardware}р<br/><br/>
+        Итого: {allAmount}р ({allAmountUsd}$)<br/>
+      </div>
+    );
   }
 
   if (hardware) {
+    setClipboard(`Курс = ${rate} \n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\nЖелезо — ${hardware}\nИтого: ${allAmount}р ( ${allAmountUsd} $)\n`)
+
     return (
       <div className="report__container">
         Курс = {rate} <br/>
@@ -231,18 +326,24 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
 
   }
 
-  if (sales) {
+  if (sales.length) {
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${getSalesList(sales)}\nИтого: ${allAmount}р ( ${allAmountUsd} $)\n`)
+
     return (
       <div className='report__container'>
         Курс = {rate} <br/>
         {shopName}:<br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
+        Продажи:
         {renderSales(sales)} <br/>
-        Итого: {allAmount}р ( {allAmountUsd} $)<br/>
+        Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>
     )
   }
 
   if (!rentCount) {
+    setClipboard(`---> !rentCount`)
+
     return (
       <div className="report__container">
         {shopName}: 0<br/>
@@ -250,6 +351,11 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
     )
   }
 
+
+  //todo
+
+  // setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${allAmount}р (${allAmountUsd}$)`)
+  setClipboard(`---> end`)
 
   return (
     <div className="report__container">
@@ -260,6 +366,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   )
 }
 
+//todo commit if all working
 
 function App() {
   const [formInputs, setFormInputs] = React.useState({
@@ -275,7 +382,11 @@ function App() {
     {itemName: "Profit St. 10mm", price: 0, count: 0, checkbox: false},
     {itemName: "Profit P. 2mm", price: 0, count: 0, checkbox: false},
     {itemName: "Profit P. 4mm", price: 0, count: 0, checkbox: false},
-    {itemName: "Profit P. 10mm", price: 90, count: 1, checkbox: true},
+    {itemName: "Profit P. 10mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Plantronics St. 2mm", price: 150, count: 1, checkbox: false},
+    {itemName: "Plantronics St. 4mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Plantronics P. 2mm", price: 0, count: 0, checkbox: false},
+    {itemName: "Plantronics P. 4mm", price: 0, count: 0, checkbox: false},
   ])
 
   const [isGenerated, setIsGenerated] = React.useState(false)
@@ -335,7 +446,6 @@ function App() {
         <GeneratedReport formInputs={formInputs} salesItemInputs={salesItemInputs} isGenerated={isGenerated}/>
 
       </main>
-
     </div>
   );
 }

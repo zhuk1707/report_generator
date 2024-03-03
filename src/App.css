@@ -145,6 +145,17 @@ button {
   color: #313131;
 }
 
+.options__button_clear {
+  border-radius: 4px;
+  margin-left: 28px;
+}
+
+.options__button_clear:hover {
+  color: #ff1919;
+  background-color: #ffd6d6;
+  border-color: rgb(255, 82, 82);
+}
+
 .options__input {
   padding: 4px;
   border: 1px solid #ccc;
