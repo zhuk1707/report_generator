@@ -133,73 +133,82 @@ function SalesItem({index, inputs, setInputs, setIsGenerated}) {
   return <div className="sales__item">
     <div className="sales__item-name">{inputs.itemName || 'No name'}</div>
     <form className="sales__options options">
-      <label className="options__name" htmlFor={"checkbox" + index}>Used</label>
-      <input
-        className="option__checkbox"
-        id={'checkbox' + index}
-        type="checkbox"
-        name="checkbox"
-        value="foo"
-        checked={inputs.checkbox || false}
-        onChange={handleChange}
-      />
-      <br/>
+      <div className="options__item">
+        <label className="options__name" htmlFor={"checkbox" + index}>Used</label>
+        <input
+          className="option__checkbox"
+          id={'checkbox' + index}
+          type="checkbox"
+          name="checkbox"
+          value="foo"
+          checked={inputs.checkbox || false}
+          onChange={handleChange}
+        />
+      </div>
 
-      <label className="options__name" htmlFor={"price" + index}>Price</label>
-      <button
-        className='options__button options__button_left'
-        type="button"
-        onClick={handlePriceLeftClick}
-      >-10
-      </button>
-      <input
-        className="options__input"
-        id={"price" + index}
-        type="text"
-        name='price'
-        value={inputs.price || ''}
-        onChange={handleChange}
-      />
-      <button
-        className='options__button options__button_right'
-        type="button"
-        onClick={handlePriceRightClick}
-      >+10
-      </button>
 
-      <label className="options__name" htmlFor={'count' + index}>Count</label>
-      <button
-        className='options__button options__button_left options__button_count'
-        type="button"
-        onClick={handleCountLeftClick}
-      >-1
-      </button>
-      <input
-        className="options__input"
-        id={"count" + index}
-        type="text"
-        name='count'
-        value={inputs.count || ''}
-        onChange={handleChange}
-      />
-      <button
-        className='options__button options__button_right options__button_count'
-        type="button"
-        onClick={handleCountRightClick}
-      >+1
-      </button>
-      <button
-        className='options__button options__button_clear'
-        type="button"
-        title='Clear all'
-        onClick={handleClearClick}
-      >✕
-      </button>
+
+      <div className="options__item">
+        <label className="options__name" htmlFor={"price" + index}>Price</label>
+        <button
+          className='options__button options__button_left'
+          type="button"
+          onClick={handlePriceLeftClick}
+        >-10
+        </button>
+        <input
+          className="options__input"
+          id={"price" + index}
+          type="text"
+          name='price'
+          value={inputs.price || ''}
+          onChange={handleChange}
+        />
+        <button
+          className='options__button options__button_right'
+          type="button"
+          onClick={handlePriceRightClick}
+        >+10
+        </button>
+      </div>
+
+      <div className="options__item">
+        <label className="options__name" htmlFor={'count' + index}>Count</label>
+        <button
+          className='options__button options__button_left options__button_count'
+          type="button"
+          onClick={handleCountLeftClick}
+        >-1
+        </button>
+        <input
+          className="options__input"
+          id={"count" + index}
+          type="text"
+          name='count'
+          value={inputs.count || ''}
+          onChange={handleChange}
+        />
+        <button
+          className='options__button options__button_right options__button_count'
+          type="button"
+          onClick={handleCountRightClick}
+        >+1
+        </button>
+      </div>
+
+      <div className="options__item">
+        <button
+          className='options__button options__button_clear'
+          type="button"
+          title='Clear all'
+          onClick={handleClearClick}
+        >✕
+        </button>
+      </div>
     </form>
   </div>
 }
 
-//todo
 function GeneratedReport({formInputs, salesItemInputs, isGenerated}) {
   const [clipboard, setClipboard] = React.useState('error')
 
@@ -265,14 +274,14 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   }
 
   if (hardware && sales.length && rentCount) {
-    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)} \nЖелезо — ${hardware}р\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)}\nЖелезо — ${hardware}р\n\nИтого: ${allAmount}р (${allAmountUsd}$)`)
 
     return (
       <div className="report__container">
         Курс = {rate} <br/>
         {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
-        Sales:
+        Продажи:
         {renderSales(sales)} <br/>
         Железо — {hardware}р<br/><br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
@@ -281,14 +290,14 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   }
 
   if (sales.length && rentCount) {
-    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)}\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)}\nИтого: ${allAmount}р (${allAmountUsd}$)`)
 
     return (
       <div className="report__container">
         Курс = {rate} <br/>
         {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
-        Sales:
+        Продажи:
         {renderSales(sales)} <br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>
@@ -297,14 +306,14 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
 
   if (hardware && sales.length) {
 
-    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)} \nЖелезо — ${hardware}р\nИтого: ${allAmount}р (${allAmountUsd}$)\n`)
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)} \nЖелезо — ${hardware}р\nИтого: ${allAmount}р (${allAmountUsd}$)`)
 
     return (
       <div className="report__container">
         Курс = {rate} <br/>
         {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
-        Sales:
+        Продажи:
         {renderSales(sales)} <br/>
         Железо — {hardware}р<br/><br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
@@ -313,7 +322,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   }
 
   if (hardware) {
-    setClipboard(`Курс = ${rate} \n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\nЖелезо — ${hardware}\nИтого: ${allAmount}р ( ${allAmountUsd} $)\n`)
+    setClipboard(`Курс = ${rate} \n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\nЖелезо — ${hardware}\nИтого: ${allAmount}р (${allAmountUsd}$)`)
 
     return (
       <div className="report__container">
@@ -321,19 +330,19 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
         {shopName}:<br/>
         {rentCount} прокат(а/ов) — {rentProfit}р<br/>
         Железо — {hardware}<br/>
-        Итого: {allAmount}р ( {allAmountUsd} $)<br/>
+        Итого: {allAmount}р ({allAmountUsd}$)<br/>
       </div>)
 
   }
 
   if (sales.length) {
-    setClipboard(`Курс = ${rate}\n${shopName}:\n${getSalesList(sales)}\nИтого: ${allAmount}р ( ${allAmountUsd} $)\n`)
+    setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${rentProfit}р\n\nПродажи:\n${getSalesList(sales)}\nИтого: ${allAmount}р (${allAmountUsd}$)`)
 
     return (
       <div className='report__container'>
         Курс = {rate} <br/>
         {shopName}:<br/>
-        {rentCount} прокат(а/ов) — {rentProfit}р<br/> <br/>
+        {rentCount} прокат(а/ов) — {rentProfit}р<br/><br/>
         Продажи:
         {renderSales(sales)} <br/>
         Итого: {allAmount}р ({allAmountUsd}$)<br/>
@@ -342,7 +351,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   }
 
   if (!rentCount) {
-    setClipboard(`---> !rentCount`)
+    setClipboard(`${shopName}: 0\n`)
 
     return (
       <div className="report__container">
@@ -351,12 +360,7 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
     )
   }
 
-
-  //todo
-
-  // setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${allAmount}р (${allAmountUsd}$)`)
-  setClipboard(`---> end`)
-
+  setClipboard(`Курс = ${rate}\n${shopName}:\n${rentCount} прокат(а/ов) — ${allAmount}р (${allAmountUsd}$)`)
   return (
     <div className="report__container">
       Курс = {rate} <br/>
@@ -365,8 +369,6 @@ function ReportContent({formInputs, salesItemInputs, setClipboard}) {
     </div>
   )
 }
-
-//todo commit if all working
 
 function App() {
   const [formInputs, setFormInputs] = React.useState({

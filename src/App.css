@@ -1,12 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
 
+:root {
+  --baccgroundColor: #f6f6f6;
+  --baccgroundColorCards: #ffffff;
+  --baccgroundColorHover: #e0e0e0;
+  --mainColor: #313131;
+  --colorBtn: #4d4d4d;
+  --borderColor: #ccc;
+  --borderHoverColor: #9a9a9a;
+  --baccgroundColorActive: #d3d3d3;
+  --redColor: #ff1919;
+  --redBackgroundColor: #ffd6d6;
+  --redBackgroundColorActive: #f5c5c5;
+  --redBorderColor: #FF5252FF;
+}
+
 * {
   box-sizing: border-box;
 }
 
-body {
-  background-color: #f6f6f6;
-  color: #313131;
+body {;
+  background-color: var(--baccgroundColor);
+  color: var(--mainColor);
   font-family: "Sora", sans-serif;
   /*font-optical-sizing: auto;*/
   font-weight: 400;
@@ -19,7 +34,7 @@ button {
 }
 
 .App {
-  width: 760px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 30px;
 }
@@ -52,7 +67,7 @@ button {
 .form__input,
 .form__select {
   max-width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
 }
 
@@ -66,12 +81,8 @@ button {
 
 .form__input:hover,
 .form__select:hover {
-  border: 1px solid #9a9a9a;
+  border: 1px solid var(--borderHoverColor);
 }
-
-.form__label {
-}
-
 
 .main__sales {
   margin: 30px 0 20px;
@@ -88,17 +99,18 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
-  background-color: #ffffff;
+  background-color: var(--baccgroundColorCards);
 }
 
 .sales__item:hover {
-  border: 1px solid #9a9a9a;
+  border: 1px solid var(--borderHoverColor);
 }
 
 .sales__item-name {
   font-size: 14px;
+  padding-right: 8px;
 }
 
 .sales__options {
@@ -108,11 +120,18 @@ button {
 .options {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+.options__item {
+  display: flex;
+  align-items: center;
+
 }
 
 .options__name {
   font-size: 12px;
-  margin: 0 6px 0 12px;
+  margin-right: 8px;
 }
 
 .option__checkbox {
@@ -127,9 +146,9 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   font-size: 12px;
-  color: #4d4d4d;
+  color: var(--colorBtn);
 }
 
 .options__button_left {
@@ -141,8 +160,12 @@ button {
 }
 
 .options__button:hover {
-  background-color: #e0e0e0;
-  color: #313131;
+  background-color: var(--baccgroundColorHover);
+  color: var(--mainColor);
+}
+
+.options__button:active {
+  background-color: var(--baccgroundColorActive);
 }
 
 .options__button_clear {
@@ -151,14 +174,19 @@ button {
 }
 
 .options__button_clear:hover {
-  color: #ff1919;
-  background-color: #ffd6d6;
-  border-color: rgb(255, 82, 82);
+  color: var(--redColor);
+  background-color: var(--redBackgroundColor);
+  border-color: var(--redBorderColor);
+}
+
+.options__button_clear:active {
+  transform: translateY(1px);
+  background-color: var(--redBackgroundColorActive);
 }
 
 .options__input {
   padding: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   max-width: 40px;
   height: 20px;
 
@@ -171,21 +199,27 @@ button {
 .generate-button {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
 }
 
 .generate-button:hover,
 .report__button:hover {
-  background-color: #e0e0e0;
-  border: 1px solid #9a9a9a;
+  background-color: var(--baccgroundColorHover);
+  border: 1px solid var(--borderHoverColor);
+}
+
+.generate-button:active,
+.report__button:active {
+  transform: translateY(1px);
+  background-color: var(--baccgroundColorActive);
 }
 
 .report {
   margin-top: 20px;
   padding: 10px 12px;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: var(--baccgroundColorCards);
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
 
   display: flex;
@@ -202,6 +236,32 @@ button {
   align-items: center;
 
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .sales__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sales__options {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .sales__options {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .options__button_clear {
+    margin-left: 0;
+  }
 }
