@@ -7,7 +7,7 @@ export default function ReportContent({formInputs, salesItemInputs, setClipboard
   const shopNameFromInput = formInputs.shopName
   const shopList = {
     almi: "АЛМИ",
-    siluet: 'Силуэт'
+    mv: 'МВ'
   }
   const shopName = shopList[shopNameFromInput]
 
