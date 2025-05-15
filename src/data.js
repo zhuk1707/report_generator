@@ -24,4 +24,6 @@ const formInputDataFormat = {
   hardware: ''
 }
 
-export {salesItems, formInputDataFormat}
+const RENT_COST = 15
+
+export {salesItems, formInputDataFormat, RENT_COST}

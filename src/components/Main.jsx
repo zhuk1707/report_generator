@@ -2,7 +2,7 @@ import Form from "./Form";
 import SalesItem from "./SalesItem";
 import GeneratedReport from "./GeneratedReport";
 import React from "react";
-import {formInputDataFormat, salesItems} from "../data";
+import {formInputDataFormat, RENT_COST, salesItems} from "../data";
 
 export default function Main() {
   const [formInputs, setFormInputs] = React.useState(formInputDataFormat)
@@ -29,6 +29,7 @@ export default function Main() {
 
   return (
     <main className='main'>
+      <div>Rent Cost = {RENT_COST}</div>
       <Form labelInfo={'Rate'} isInput={true} inputInfo={{name: "rate"}} formInputs={formInputs}
             handleChange={handleChange}/>
       <Form labelInfo={'Shop name'} isInput={false} selectInfo={{name: "shopName"}} formInputs={formInputs}
