@@ -213,6 +213,18 @@ button {
   margin-top: 20px;
 }
 
+.sales-item-display-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.sales-item-display-button .icon {
+  margin-top: 3px;
+}
+
 .generate-button {
   width: 100%;
   padding: 12px;
