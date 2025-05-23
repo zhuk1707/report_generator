@@ -58,7 +58,9 @@ export default function Main() {
       >Generate
       </button>
 
-      <GeneratedReport formInputs={formInputs} salesItemInputs={salesItemInputs} isGenerated={isGenerated}/>
+      {isGenerated
+        ? <GeneratedReport formInputs={formInputs} salesItemInputs={salesItemInputs}/>
+        : null}
 
     </main>
   )
