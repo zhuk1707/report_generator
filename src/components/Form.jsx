@@ -2,7 +2,15 @@ import React from "react";
 import FormInput from "./FormInput";
 import FormSelect from "./FormSelect";
 
-export default function Form({labelInfo, isInput, inputInfo, selectInfo, formInputs, handleChange}) {
+export default function Form(
+  {
+    labelInfo,
+    isInput = true,
+    inputInfo,
+    selectInfo,
+    formInputs,
+    handleChange
+  }) {
   return (<>
     <form
       className='main__form form'

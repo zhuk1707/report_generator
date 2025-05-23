@@ -1,5 +1,4 @@
 import React from "react";
-import {RENT_COST} from "../data";
 
 export default function ReportContent({formInputs, salesItemInputs, setClipboard}) {
   let rate = +formInputs.rate
@@ -15,7 +14,7 @@ export default function ReportContent({formInputs, salesItemInputs, setClipboard
   const rentCount = +formInputs.rentCount
   const hardware = +formInputs.hardware
 
-  const rentCost = RENT_COST
+  const rentCost = +formInputs.rentCost
   const rentProfit = rentCount * rentCost
   const amount = rentCount * rentCost + hardware
 

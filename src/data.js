@@ -19,13 +19,12 @@ const salesItems = [
   {itemName: "Plantronics P. 4mm", price: 0, count: 0, checkbox: false},
 ]
 
-const formInputDataFormat = {
+const formsInitialState = {
   rate: '',
+  rentCost: '15',
   shopName: "almi",
   rentCount: '',
   hardware: ''
 }
 
-const RENT_COST = 15
-
-export {salesItems, formInputDataFormat, RENT_COST}
+export {salesItems, formsInitialState}
