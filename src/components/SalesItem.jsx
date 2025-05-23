@@ -1,169 +1,71 @@
 import React from "react";
 
-export default function SalesItem({index, inputs, setInputs, setIsGenerated}) {
+export default function SalesItem({ index, inputs, setInputs, setIsGenerated }) {
+
+  const updateInput = (key, value) => {
+    setInputs(prevValues => {
+      const newValues = [...prevValues];
+      newValues[index] = { ...newValues[index], [key]: value };
+      return newValues;
+    });
+    setIsGenerated(false);
+  };
+
   const handleChange = (e) => {
-    const key = e.target.name
-    let value = e.target.value
-    if (e.target.type === 'checkbox') {
-      value = e.target.checked
-    }
+    const { name, type, checked, value } = e.target;
+    const newValue = type === "checkbox" ? checked : isNaN(+value) ? inputs[name] : +value;
+    updateInput(name, newValue);
+  };
 
-    if ((/[^0-9]/).test(value) && e.target.type !== 'checkbox') return
-    if (e.target.type !== 'checkbox') value = +value
-    console.log(key, value)
-    // if (key === 'price' && value < 0) value = 0
-
-
-    setInputs((values) => {
-        const valuesCopy = [...values]
-        valuesCopy[index] = {
-          ...valuesCopy[index],
-          [key]: value,
-        }
-        return valuesCopy
-      }
-    )
-
-    setIsGenerated(false)
-  }
-
-  const handlePriceLeftClick = () => {
-    const itemPrice = inputs.price
-    let delta = 10
-    if (itemPrice <= 0) {
-      delta = 0
-    }
-
-    if (itemPrice < 10) {
-      delta = itemPrice
-    }
-
-    setInputs((values) => {
-        const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], price: (+valuesCopy[index].price - delta)}
-        return valuesCopy
-      }
-    )
-    setIsGenerated(false)
-  }
-
-  const handlePriceRightClick = () => {
-    setInputs((values) => {
-        const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], price: (+valuesCopy[index].price + 10)}
-        return valuesCopy
-      }
-    )
-    setIsGenerated(false)
-  }
-
-  const handleCountLeftClick = () => {
-    if (inputs.count > 0) {
-      setInputs((values) => {
-          const valuesCopy = [...values]
-          valuesCopy[index] = {...valuesCopy[index], count: (+valuesCopy[index].count - 1)}
-          return valuesCopy
-        }
-      )
-    }
-    setIsGenerated(false)
-  }
-
-  const handleCountRightClick = () => {
-    setInputs((values) => {
-        const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], count: (+valuesCopy[index].count + 1)}
-        return valuesCopy
-      }
-    )
-    setIsGenerated(false)
-  }
+  const handleAdjustValue = (key, adjustment) => {
+    const newValue = Math.max(0, (inputs[key] || 0) + adjustment);
+    updateInput(key, newValue);
+  };
 
   const handleClearClick = () => {
-    setInputs((values) => {
-        const valuesCopy = [...values]
-        valuesCopy[index] = {...valuesCopy[index], price: 0, count: 0, checkbox: false}
-        return valuesCopy
-      }
-    )
-    setIsGenerated(false)
-  }
+    updateInput("price", 0);
+    updateInput("count", 0);
+    updateInput("checkbox", false);
+  };
 
-  return <div className="sales__item">
-    <div className="sales__item-name">{inputs.itemName || 'No name'}</div>
-    <form className="sales__options options">
-      <div className="options__item">
-        <label className="options__name" htmlFor={"checkbox" + index}>Used</label>
-        <input
-          className="option__checkbox"
-          id={'checkbox' + index}
-          type="checkbox"
-          name="checkbox"
-          value="foo"
-          checked={inputs.checkbox || false}
-          onChange={handleChange}
-        />
-      </div>
+  return (
+    <div className="sales__item">
+      <div className="sales__item-name">{inputs.itemName || "No name"}</div>
+      <form className="sales__options options">
+        {/* Checkbox */}
+        <div className="options__item">
+          <label className="options__name" htmlFor={`checkbox${index}`}>Used</label>
+          <input
+            className="option__checkbox"
+            id={`checkbox${index}`}
+            type="checkbox"
+            name="checkbox"
+            checked={inputs.checkbox || false}
+            onChange={handleChange}
+          />
+        </div>
 
+        {/* Price Input */}
+        <div className="options__item">
+          <label className="options__name" htmlFor={`price${index}`}>Price</label>
+          <button className="options__button options__button_left" type="button" onClick={() => handleAdjustValue("price", -10)}>-10</button>
+          <input className="options__input" id={`price${index}`} type="text" name="price" value={inputs.price || ""} onChange={handleChange} />
+          <button className="options__button options__button_right" type="button" onClick={() => handleAdjustValue("price", 10)}>+10</button>
+        </div>
 
+        {/* Count Input */}
+        <div className="options__item">
+          <label className="options__name" htmlFor={`count${index}`}>Count</label>
+          <button className="options__button options__button_left options__button_count" type="button" onClick={() => handleAdjustValue("count", -1)}>-1</button>
+          <input className="options__input" id={`count${index}`} type="text" name="count" value={inputs.count || ""} onChange={handleChange} />
+          <button className="options__button options__button_right options__button_count" type="button" onClick={() => handleAdjustValue("count", 1)}>+1</button>
+        </div>
 
-      <div className="options__item">
-        <label className="options__name" htmlFor={"price" + index}>Price</label>
-        <button
-          className='options__button options__button_left'
-          type="button"
-          onClick={handlePriceLeftClick}
-        >-10
-        </button>
-        <input
-          className="options__input"
-          id={"price" + index}
-          type="text"
-          name='price'
-          value={inputs.price || ''}
-          onChange={handleChange}
-        />
-        <button
-          className='options__button options__button_right'
-          type="button"
-          onClick={handlePriceRightClick}
-        >+10
-        </button>
-      </div>
-
-      <div className="options__item">
-        <label className="options__name" htmlFor={'count' + index}>Count</label>
-        <button
-          className='options__button options__button_left options__button_count'
-          type="button"
-          onClick={handleCountLeftClick}
-        >-1
-        </button>
-        <input
-          className="options__input"
-          id={"count" + index}
-          type="text"
-          name='count'
-          value={inputs.count || ''}
-          onChange={handleChange}
-        />
-        <button
-          className='options__button options__button_right options__button_count'
-          type="button"
-          onClick={handleCountRightClick}
-        >+1
-        </button>
-      </div>
-
-      <div className="options__item">
-        <button
-          className='options__button options__button_clear'
-          type="button"
-          title='Clear all'
-          onClick={handleClearClick}
-        >✕
-        </button>
-      </div>
-    </form>
-  </div>
+        {/* Clear Button */}
+        <div className="options__item">
+          <button className="options__button options__button_clear" type="button" title="Clear all" onClick={handleClearClick}>✕</button>
+        </div>
+      </form>
+    </div>
+  );
 }
