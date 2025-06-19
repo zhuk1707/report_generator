@@ -19,7 +19,7 @@
   box-sizing: border-box;
 }
 
-body {;
+body {
   background-color: var(--baccgroundColor);
   color: var(--mainColor);
   font-family: "Sora", sans-serif;
