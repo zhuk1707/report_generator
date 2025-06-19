@@ -1,17 +1,10 @@
 import React from "react";
 
-export default function Header({title = ''}) {
-  const titleWordsArray = title.trim().split(' ')
-
+export default function Header() {
 
   return (
     <header className="header">
-      {titleWordsArray &&
-        titleWordsArray.map((word) => (
-          <span className='header__word'>
-            {word}
-          </span>
-        ))}
+      report generator
     </header>
   )
 }

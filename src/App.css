@@ -51,20 +51,6 @@ button {
   gap: 8px
 }
 
-.header__word {
-  display: inline-block;
-
-  background: #0043a7;
-  border: 1px solid #0d1860;
-  border-radius: 4px;
-
-  color: #fff;
-
-  line-height: 1.5rem;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, .7);
-  padding: 8px;
-}
 
 .main {
   margin-bottom: 40px;
@@ -83,16 +69,17 @@ button {
 
 .form__input,
 .form__select {
-  max-width: 100%;
   border: 1px solid var(--borderColor);
   border-radius: 4px;
 }
 
 .form__input {
+  max-width: 100%;
   padding: 10px 12px;
 }
 
 .form__select {
+  max-width: 100%;
   padding: 10px;
 }
 
@@ -101,128 +88,35 @@ button {
   border: 1px solid var(--borderHoverColor);
 }
 
+.inline-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center
+}
+
+.inline-form__input {
+  display: inline-block;
+  padding: 4px;
+}
+
+.inline-form .used-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .main__sales {
   margin: 30px 0 20px;
-}
-
-.sales {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sales__item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border: 1px solid var(--borderColor);
-  border-radius: 4px;
-  background-color: var(--baccgroundColorCards);
-}
-
-.sales__item:hover {
-  border: 1px solid var(--borderHoverColor);
-}
-
-.sales__item-name {
-  font-size: 14px;
-  padding-right: 8px;
-}
-
-.sales__options {
-  display: flex;
-}
-
-.options {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.options__item {
-  display: flex;
-  align-items: center;
-
-}
-
-.options__name {
-  font-size: 12px;
-  margin-right: 8px;
-}
-
-.option__checkbox {
-  margin: auto 0;
-  cursor: pointer;
-}
-
-.options__button {
-  height: 20px;
-  min-width: 20px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid var(--borderColor);
-  font-size: 12px;
-  color: var(--colorBtn);
-}
-
-.options__button_left {
-  border-radius: 4px 0 0 4px;
-}
-
-.options__button_right {
-  border-radius: 0 4px 4px 0;
-}
-
-.options__button:hover {
-  background-color: var(--baccgroundColorHover);
-  color: var(--mainColor);
-}
-
-.options__button:active {
-  background-color: var(--baccgroundColorActive);
-}
-
-.options__button_clear {
-  border-radius: 4px;
-  margin-left: 28px;
-}
-
-.options__button_clear:hover {
-  color: var(--redColor);
-  background-color: var(--redBackgroundColor);
-  border-color: var(--redBorderColor);
-}
-
-.options__button_clear:active {
-  transform: translateY(1px);
-  background-color: var(--redBackgroundColorActive);
-}
-
-.options__input {
-  padding: 4px;
-  border: 1px solid var(--borderColor);
-  max-width: 40px;
-  height: 20px;
-
 }
 
 .main__button {
   margin-top: 20px;
 }
 
-.sales-item-display-button {
+.sold-device__item {
   display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-}
-
-.sales-item-display-button .icon {
-  margin-top: 3px;
+  gap: 8px;
 }
 
 .generate-button {
