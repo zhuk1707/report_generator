@@ -31,6 +31,18 @@ body {
 button {
   cursor: pointer;
   font-family: "Sora", sans-serif;
+  border: 1px solid var(--borderColor);
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: var(--baccgroundColorHover);
+  border: 1px solid var(--borderHoverColor);
+}
+
+button:active {
+  transform: translateY(1px);
+  background-color: var(--baccgroundColorActive);
 }
 
 .App {
@@ -68,7 +80,8 @@ button {
 }
 
 .form__input,
-.form__select {
+.form__select,
+.inline-form__input {
   border: 1px solid var(--borderColor);
   border-radius: 4px;
 }
@@ -84,7 +97,8 @@ button {
 }
 
 .form__input:hover,
-.form__select:hover {
+.form__select:hover,
+.inline-form__input:hover {
   border: 1px solid var(--borderHoverColor);
 }
 
@@ -106,36 +120,45 @@ button {
   gap: 4px;
 }
 
-.main__sales {
-  margin: 30px 0 20px;
+.sold-devices {
+  margin: 10px 0;
 }
 
-.main__button {
-  margin-top: 20px;
+.sold-devices__label {
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .sold-device__item {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.sold-device__item:nth-child(even) {
+  background: var(--baccgroundColorHover);
+}
+
+.sold-device__desc {
+
+}
+
+.sold-device__remove-btn {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+
 }
 
 .generate-button {
   width: 100%;
   padding: 12px;
-  border: 1px solid var(--borderColor);
-  border-radius: 4px;
-}
-
-.generate-button:hover,
-.report__button:hover {
-  background-color: var(--baccgroundColorHover);
-  border: 1px solid var(--borderHoverColor);
-}
-
-.generate-button:active,
-.report__button:active {
-  transform: translateY(1px);
-  background-color: var(--baccgroundColorActive);
 }
 
 .report {
