@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AddSoldDevicesForm from "./AddSoldDevicesForm.jsx";
 import SoldDevicesList from "./SoldDevicesList.jsx";
 import RentForm from "./RentForm.jsx";
@@ -7,7 +7,7 @@ import generateReportArray from "../utils/generateReportArray.js";
 export default function Main() {
   const formState = {
     rentCost: 15,
-    rate: 0,
+    rate: 2.99,
     shopName: 'mv',
     rentCount: 0,
     hardware: 0
@@ -24,7 +24,14 @@ export default function Main() {
   const [formData, setFormData] = useState(formState);
   const [soldDevicesForm, setSoldDevicesForm] = useState(soldDevicesFormState);
   const [soldDevices, setSoldDevices] = useState([])
-  const [clipboard, setClipboard] = React.useState('error')
+  const [isGenerated, setIsGenerated] = useState(false);
+
+  const [clipboard, setClipboard] = useState([])
+
+  useEffect(() => {
+    setIsGenerated(false)
+    setClipboard([])
+  }, [formData, soldDevices]);
 
   const handleChange = (e) => {
     const {name, type, value} = e.target;
@@ -54,7 +61,7 @@ export default function Main() {
 
 
   const handleCopyBtnClick = () => {
-    navigator.clipboard.writeText(clipboard).then()
+    navigator.clipboard.writeText(clipboard.join('')).then()
   }
 
   return (
@@ -79,24 +86,30 @@ export default function Main() {
 
       <button
         className="generate-button"
-        onClick={() => generateReportArray(formData, soldDevices)}
+        onClick={() => {
+          setClipboard([... generateReportArray(formData, soldDevices)])
+          setIsGenerated(true)
+
+        }}
 
       >
         Generate Report
       </button>
 
 
-
-      <div className="main__report report">
-        <div className="report__container">
-          Noting
-        </div>
-        <button
-          className="report__button"
-          onClick={handleCopyBtnClick}
-        >Copy
-        </button>
-      </div>
+      {isGenerated &&
+        <div className="main__report report">
+          {clipboard.length > 0 &&
+            <pre className="report__container">
+              {clipboard.join('')}
+          </pre>
+          }
+          <button
+            className="report__button"
+            onClick={handleCopyBtnClick}
+          >Copy
+          </button>
+        </div>}
 
 
     </main>
