@@ -38,7 +38,7 @@ export default function Main() {
     const {name, type, value} = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === "number" ? +value : value
+      [name]: type === "number" ? value : value
     }));
   };
 
@@ -68,18 +68,20 @@ export default function Main() {
         onChange={handleChange}
       />
 
-      <AddSoldDevicesForm
-        formData={soldDevicesForm}
-        onChange={soldDevicesHandle}
-        onSubmit={addSoldDevice}
-      />
-
-      {soldDevices.length > 0 && (
-        <SoldDevicesList
-          devices={soldDevices}
-          onRemove={removeSoldDevice}
+      <section className="sold-devices-section">
+        <AddSoldDevicesForm
+          formData={soldDevicesForm}
+          onChange={soldDevicesHandle}
+          onSubmit={addSoldDevice}
         />
-      )}
+
+        {soldDevices.length > 0 && (
+          <SoldDevicesList
+            devices={soldDevices}
+            onRemove={removeSoldDevice}
+          />
+        )}
+      </section>
 
       <button
         className="generate-button"

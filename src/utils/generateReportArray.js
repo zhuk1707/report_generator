@@ -8,18 +8,21 @@ const generateReportArray = (formData, soldDevices) => {
   if (formData.shopName === "almi") shopName = 'АЛМИ'
   if (formData.shopName === "mv") shopName = 'МВ'
 
+
   if (!formData.rentCount && !soldDevices.length > 0 && !formData.hardware) {
     return `${shopName}: 0р`
   }
 
+  const rentCount = +formData.rentCount
+  const rentCost = +formData.rentCost
   reportArr.push(shopName + ':\n')
 
-  const allRentsValue = formData.rentCost * formData.rentCount
+  const allRentsValue = rentCost * rentCount
   const allSoldDevicesValue = soldDevices.reduce((prev, curr) => {
     return prev + +curr.deviceCost
   }, 0)
 
-  reportArr.push(`${formData.rentCount} прокат(а/ов) — ${allRentsValue}р`)
+  reportArr.push(`${rentCount} прокат(а/ов) — ${allRentsValue}р`)
 
   if (soldDevices.length > 0) {
     reportArr.push('\n\nПродажи:\n')
@@ -38,8 +41,10 @@ const generateReportArray = (formData, soldDevices) => {
     reportArr.push(`\n\nЖелезо — ${formData.hardware}р`)
   }
 
-  const allProfit = allRentsValue + formData.hardware + allSoldDevicesValue
-  const allProfitUSD = formatNumber(allProfit / formData.rate)
+  const hardware = +formData.hardware
+  const rate = +formData.rate
+  const allProfit = allRentsValue + hardware + allSoldDevicesValue
+  const allProfitUSD = formatNumber(allProfit / rate)
   reportArr.push(`\n\nИтого: ${allProfit}р (${allProfitUSD}$)`)
 
   return reportArr

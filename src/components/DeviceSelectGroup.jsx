@@ -1,5 +1,4 @@
-
-export default function DeviceSelectGroup({ form, onChange }) {
+export default function DeviceSelectGroup({form, onChange}) {
   return (
     <div className="inline-form">
       <select
@@ -35,16 +34,15 @@ export default function DeviceSelectGroup({ form, onChange }) {
       </select>
 
       <div className="used-checkbox">
-        <label htmlFor="isUsed">
-          <input
-            type="checkbox"
-            id="isUsed"
-            name="isUsed"
-            checked={form.isUsed}
-            onChange={onChange}
-          />
-          used
-        </label>
+        <input
+          type="checkbox"
+          id="isUsed"
+          name="isUsed"
+          checked={form.isUsed}
+          onChange={onChange}
+        />
+        <label htmlFor="isUsed"> used </label>
+
       </div>
 
       <input
