@@ -3,6 +3,7 @@ import AddSoldDevicesForm from "./AddSoldDevicesForm.jsx";
 import SoldDevicesList from "./SoldDevicesList.jsx";
 import RentForm from "./RentForm.jsx";
 import generateReportArray from "../utils/generateReportArray.js";
+import Report from "./Report.jsx";
 
 export default function Main() {
   const formState = {
@@ -60,10 +61,6 @@ export default function Main() {
   }
 
 
-  const handleCopyBtnClick = () => {
-    navigator.clipboard.writeText(clipboard.join('')).then()
-  }
-
   return (
     <main>
       <RentForm
@@ -87,30 +84,16 @@ export default function Main() {
       <button
         className="generate-button"
         onClick={() => {
-          setClipboard([... generateReportArray(formData, soldDevices)])
+          setClipboard([...generateReportArray(formData, soldDevices)])
           setIsGenerated(true)
-
         }}
-
       >
         Generate Report
       </button>
 
-
       {isGenerated &&
-        <div className="main__report report">
-          {clipboard.length > 0 &&
-            <pre className="report__container">
-              {clipboard.join('')}
-          </pre>
-          }
-          <button
-            className="report__button"
-            onClick={handleCopyBtnClick}
-          >Copy
-          </button>
-        </div>}
-
+        <Report clipboard={clipboard}/>
+      }
 
     </main>
   );

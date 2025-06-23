@@ -19,9 +19,7 @@ const generateReportArray = (formData, soldDevices) => {
     return prev + +curr.deviceCost
   }, 0)
 
-
   reportArr.push(`${formData.rentCount} прокат(а/ов) — ${allRentsValue}р`)
-
 
   if (soldDevices.length > 0) {
     reportArr.push('\n\nПродажи:\n')
@@ -44,20 +42,7 @@ const generateReportArray = (formData, soldDevices) => {
   const allProfitUSD = formatNumber(allProfit / formData.rate)
   reportArr.push(`\n\nИтого: ${allProfit}р (${allProfitUSD}$)`)
 
-  console.log(reportArr)
-
   return reportArr
 }
 
-
-// Курс $ = 3
-// АЛМИ:
-//   5 прокат(а/ов) — 75р
-//
-// Продажи:
-//   Golf St. 2mm used X 1 — 90р
-//
-// Железо — 1р
-//
-// Итого: 166р (55.33$)
 export default generateReportArray
