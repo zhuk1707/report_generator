@@ -48,7 +48,7 @@ button:active {
 .App {
   max-width: 800px;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 20px;
 }
 
 .header {
@@ -62,6 +62,7 @@ button:active {
   justify-content: center;
   gap: 8px
 }
+
 
 
 .main {
@@ -109,19 +110,26 @@ button:active {
   align-items: center
 }
 
+
 .inline-form__input {
   display: inline-block;
   padding: 4px;
 }
 
-.inline-form .used-checkbox {
+ .used-checkbox {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
+.sold-devices-section {
+  border: 1px solid var(--borderColor);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+}
+
 .sold-devices {
-  margin: 10px 0;
 }
 
 .sold-devices__label {
@@ -182,7 +190,6 @@ button:active {
   margin: 0;
 }
 
-
 .report__button {
   height: 36px;
   display: flex;
@@ -194,21 +201,30 @@ button:active {
   border-radius: 4px;
 }
 
-@media (max-width: 600px) {
-  .sales__item {
+@media screen and (max-width: 425px) {
+  .App {
+    padding: 0 5px;
+  }
+
+  .header {
+    padding: 0 0 30px 0 ;
+    justify-content: start;
+  }
+
+
+  .inline-form {
     flex-direction: column;
-    align-items: flex-start;
     gap: 8px;
   }
 
-  .sales__options {
-    display: flex;
-    justify-content: space-between;
+  .inline-form > * {
     width: 100%;
   }
-}
 
-@media (max-width: 500px) {
+  .used-checkbox label {
+    font-size: 14px;
+  }
+
   .sales__options {
     flex-direction: column;
     align-items: flex-start;
@@ -218,4 +234,20 @@ button:active {
   .options__button_clear {
     margin-left: 0;
   }
+
+  .sold-device__desc {
+    font-size: 14px;
+  }
+
+  .report__container {
+    font-size: 12px !important;
+  }
+
+  button.report__button {
+    line-height: 1;
+    padding: 4px;
+    margin: 0;
+    height: 28px;
+  }
 }
+

@@ -8,9 +8,7 @@ const Report = ({clipboard}) => {
 
   return (<div className="main__report report">
     {clipboard.length > 0 &&
-      <pre className="report__container">
-              {clipboard.join('')}
-            </pre>
+      <pre className="report__container">{clipboard.join('')}</pre>
     }
     <button
       className="report__button"
