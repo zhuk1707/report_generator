@@ -201,11 +201,26 @@ button:active {
 .report__container {
   margin: 0;
   font-size: 16px;
+  min-height: 36px;
 }
 
 .report__container p {
   padding: 0;
   margin: 0;
+}
+
+.footer {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  height: 60px;
+  color: var(--colorBtn);
+  font-size: 14px;
+}
+
+.footer a {
+  margin-left: 4px;
+  color: var(--mainColor);
 }
 
 @media screen and (max-width: 425px) {
@@ -246,7 +261,8 @@ button:active {
   }
 
   .report__container {
-    font-size: 12px !important;
+    font-size: 14px;
+    min-height: 28px;
   }
 
   button.button_copy-report {
@@ -254,6 +270,10 @@ button:active {
     padding: 4px;
     margin: 0;
     height: 28px;
+  }
+
+  .footer {
+    font-size: 12px;
   }
 }
 

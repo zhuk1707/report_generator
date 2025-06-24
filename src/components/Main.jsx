@@ -4,6 +4,7 @@ import SoldDevicesList from "./SoldDevicesList.jsx";
 import RentForm from "./RentForm.jsx";
 import generateReportArray from "../utils/generateReportArray.js";
 import Report from "./Report.jsx";
+import Footer from "./Footer.jsx";
 
 export default function Main() {
   const formState = {
@@ -96,6 +97,8 @@ export default function Main() {
       {isGenerated &&
         <Report clipboard={clipboard}/>
       }
+
+      <Footer/>
 
     </main>
   );
