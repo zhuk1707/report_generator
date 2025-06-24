@@ -1,9 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 
 const Report = ({clipboard}) => {
+  const [isCopied, setIsCopied] = useState(false);
+
   const handleCopyBtnClick = () => {
     navigator.clipboard.writeText(clipboard.join('')).then()
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 500);
   }
 
   return (
@@ -14,7 +18,7 @@ const Report = ({clipboard}) => {
       <button
         className="button button_copy-report"
         onClick={handleCopyBtnClick}
-      >Copy
+      >{!isCopied ? 'Copy' : 'Copied!'}
       </button>
     </div>)
 }

@@ -61,7 +61,6 @@ export default function Main() {
     setSoldDevices(prevState => prevState.filter((_, index) => index !== id))
   }
 
-
   return (
     <main>
       <RentForm
