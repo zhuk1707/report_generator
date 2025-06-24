@@ -84,7 +84,7 @@ export default function Main() {
       </section>
 
       <button
-        className="generate-button"
+        className="button_generate-report"
         onClick={() => {
           setClipboard([...generateReportArray(formData, soldDevices)])
           setIsGenerated(true)

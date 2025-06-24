@@ -6,16 +6,17 @@ const Report = ({clipboard}) => {
     navigator.clipboard.writeText(clipboard.join('')).then()
   }
 
-  return (<div className="main__report report">
-    {clipboard.length > 0 &&
-      <pre className="report__container">{clipboard.join('')}</pre>
-    }
-    <button
-      className="report__button"
-      onClick={handleCopyBtnClick}
-    >Copy
-    </button>
-  </div>)
+  return (
+    <div className="main__report report">
+      {clipboard.length > 0 &&
+        <pre className="report__container">{clipboard.join('')}</pre>
+      }
+      <button
+        className="button button_copy-report"
+        onClick={handleCopyBtnClick}
+      >Copy
+      </button>
+    </div>)
 }
 
 export default Report

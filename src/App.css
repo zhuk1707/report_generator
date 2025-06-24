@@ -45,6 +45,26 @@ button:active {
   background-color: var(--baccgroundColorActive);
 }
 
+.button_add-sold-device {
+  padding: 8px 10px;
+}
+
+.button_copy-report {
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.button_generate-report {
+  width: 100%;
+  padding: 12px;
+}
+
 .App {
   max-width: 800px;
   margin: 0 auto;
@@ -63,16 +83,18 @@ button:active {
   gap: 8px
 }
 
-
-
 .main {
   margin-bottom: 40px;
 }
 
-.form {
+.form,
+.form_sold-devices {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.form {
   margin: 0 0 20px 0;
 }
 
@@ -107,16 +129,17 @@ button:active {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
+  gap: 16px;
 }
-
 
 .inline-form__input {
   display: inline-block;
   padding: 4px;
+  width: 100%;
 }
 
- .used-checkbox {
+.used-checkbox {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -134,7 +157,7 @@ button:active {
 
 .sold-devices__label {
   font-weight: 600;
-  margin-bottom: 10px;
+  margin: 20px 0 10px
 }
 
 .sold-device__item {
@@ -161,12 +184,6 @@ button:active {
   align-items: center;
   width: 28px;
   height: 28px;
-
-}
-
-.generate-button {
-  width: 100%;
-  padding: 12px;
 }
 
 .report {
@@ -178,6 +195,7 @@ button:active {
 
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .report__container {
@@ -190,27 +208,15 @@ button:active {
   margin: 0;
 }
 
-.report__button {
-  height: 36px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 10px 12px;
-  border: 1px solid var(--borderColor);
-  border-radius: 4px;
-}
-
 @media screen and (max-width: 425px) {
   .App {
     padding: 0 5px;
   }
 
   .header {
-    padding: 0 0 30px 0 ;
+    padding: 0 0 30px 0;
     justify-content: start;
   }
-
 
   .inline-form {
     flex-direction: column;
@@ -243,7 +249,7 @@ button:active {
     font-size: 12px !important;
   }
 
-  button.report__button {
+  button.button_copy-report {
     line-height: 1;
     padding: 4px;
     margin: 0;

@@ -1,6 +1,6 @@
 export default function DeviceSelectGroup({form, onChange}) {
   return (
-    <div className="inline-form">
+    <form className="inline-form">
       <select
         name="deviceName"
         value={form.deviceName}
@@ -53,6 +53,6 @@ export default function DeviceSelectGroup({form, onChange}) {
         value={form.deviceCost}
         onChange={onChange}
       />
-    </div>
+    </form>
   );
 }
