@@ -1,4 +1,6 @@
+import React from "react";
 import FormInput from "./FormInput";
+import FormInputWithCircleLink from "./FormInputWithCircleLink.jsx";
 
 export default function RentForm({formData, onChange}) {
   return (
@@ -11,14 +13,15 @@ export default function RentForm({formData, onChange}) {
         type="number"
         placeholder="Rent cost"
       />
-      <FormInput
-        label="Rate"
-        name="rate"
-        value={formData.rate}
-        onChange={onChange}
-        type="number"
-        placeholder="USD to BYN rate"
-      />
+        <FormInputWithCircleLink
+          label="Rate"
+          name="rate"
+          value={formData.rate}
+          onChange={onChange}
+          type="number"
+          placeholder="USD to BYN rate"
+        />
+
       <label htmlFor="shopSelect" className="form__label">Shop name</label>
       <select
         name="shopName"
