@@ -14,7 +14,7 @@ export default function RentForm({formData, onChange}) {
         placeholder="Rent cost"
       />
         <FormInputWithCircleLink
-          label="Rate"
+          label="Currency rate"
           name="rate"
           value={formData.rate}
           onChange={onChange}

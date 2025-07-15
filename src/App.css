@@ -89,8 +89,8 @@ button:active, .circle-link:active {
 
 .circle-link {
   display: inline-block;
-  height: 40px;
-  width: 40px;
+  min-height: 40px;
+  min-width: 40px;
   padding: 8px;
   overflow: hidden;
   color: var(--colorBtn);
@@ -110,8 +110,8 @@ button:active, .circle-link:active {
 }
 
 .circle-link img {
-  max-width: 80%;
-  max-height: 80%;
+  width: 85%;
+  height: 85%;
   display: block;
 }
 
